@@ -7,8 +7,12 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
-    "type-check": "tsc -b",
-    "preview": "vite preview"
+    "vercel-build": "vite build",
+    "preview": "vite preview",
+    "type-check": "tsc -b"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "framer-motion": "^11.0.0",
