@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const API_BASE = "https://tigerbeer2025.azurewebsites.net/api";
@@ -35,7 +35,25 @@ export function RegisterScreen({
   const nameWrapRef = useRef<HTMLDivElement | null>(null);
   const phoneWrapRef = useRef<HTMLDivElement | null>(null);
 
-  // đo & set biến --fieldH theo chiều cao container, cập nhật khi resize
+  // 1) Khóa chiều cao app theo chiều cao LẦN ĐẦU (để bàn phím đè lên, không đẩy layout)
+  useEffect(() => {
+    // Lấy chiều cao ban đầu khi vào màn
+    const initialH = window.innerHeight;
+    document.documentElement.style.setProperty("--appH", `${initialH}px`);
+
+    // Giữ cuộn ở top khi focus input (Safari iOS hay cố kéo layout)
+    const keepTop = () => {
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("focusin", keepTop);
+
+    return () => {
+      window.removeEventListener("focusin", keepTop);
+      document.documentElement.style.removeProperty("--appH");
+    };
+  }, []);
+
+  // 2) Đo & set biến --fieldH theo chiều cao container, cập nhật khi resize
   useEffect(() => {
     const els = [nameWrapRef.current, phoneWrapRef.current].filter(
       (x): x is HTMLDivElement => !!x
@@ -71,7 +89,9 @@ export function RegisterScreen({
     e.preventDefault();
     if (!nameValid) return onError("Tên không hợp lệ (ít nhất 8 ký tự).");
     if (!phoneValid)
-      return onError("Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).");
+      return onError(
+        "Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84)."
+      );
 
     setLoading(true);
     try {
@@ -93,91 +113,101 @@ export function RegisterScreen({
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="font-barlow absolute left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
-        style={{ top: "60vh", width: "80%" }}
+      {/*
+        Wrapper FIXED toàn màn hình dùng chiều cao ban đầu (--appH)
+        để khi bàn phím mở ra thì KEYBOARD đè lên, KHÔNG đẩy layout.
+      */}
+      <div
+        className="fixed inset-0 z-10"
+        style={{ height: "var(--appH, 100vh)" }}
       >
-        {/* Họ và tên */}
-        <div>
-          <div
-            ref={nameWrapRef}
-            className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
-            style={{ backgroundImage: fieldBg }}
+        <div className="relative w-full h-full overscroll-contain touch-manipulation">
+          {/* Đặt form bằng vị trí tuyệt đối theo --appH (thay vì 60vh chuẩn động) */}
+          <form
+            onSubmit={handleSubmit}
+            className="font-barlow absolute left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
+            style={{ top: "calc(var(--appH, 100vh) * 0.6)", width: "80%" }}
           >
-            {/* tạo tỉ lệ khung; giữ nguyên như bạn đang dùng */}
-            <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
-            <input
-              id="fullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="HỌ VÀ TÊN"
-              className="font-bold uppercase [&::placeholder]:font-normal
-                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                         text-white placeholder-white/70 text-center leading-none"
-              // font-size = 80% chiều cao container
-              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
-              autoComplete="name"
-            />
-          </div>
-          {!nameValid && fullName.length > 0 && (
-            <p className="mt-1 text-xs sm:text-sm text-red-300">
-              Tên không hợp lệ (ít nhất 8 ký tự).
-            </p>
-          )}
-        </div>
+            {/* Họ và tên */}
+            <div>
+              <div
+                ref={nameWrapRef}
+                className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
+                style={{ backgroundImage: fieldBg }}
+              >
+                {/* tạo tỉ lệ khung */}
+                <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
+                <input
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="HỌ VÀ TÊN"
+                  className="font-bold uppercase [&::placeholder]:font-normal absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none text-white placeholder-white/70 text-center leading-none"
+                  // font-size = 50% chiều cao container
+                  style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
+                  autoComplete="name"
+                  enterKeyHint="next"
+                />
+              </div>
+              {!nameValid && fullName.length > 0 && (
+                <p className="mt-1 text-xs sm:text-sm text-red-300">
+                  Tên không hợp lệ (ít nhất 8 ký tự).
+                </p>
+              )}
+            </div>
 
-        {/* Số điện thoại */}
-        <div>
-          <div
-            ref={phoneWrapRef}
-            className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
-            style={{ backgroundImage: fieldBg }}
-          >
-            <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
-            <input
-              id="phone"
-              inputMode="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="SỐ ĐIỆN THOẠI"
-              className="font-bold uppercase [&::placeholder]:font-normal
-                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                         text-white placeholder-white/70 text-center leading-none"
-              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
-              autoComplete="tel"
-            />
-          </div>
-          {!phoneValid && phone.length > 0 && (
-            <p className="mt-1 text-xs sm:text-sm text-red-300">
-              Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).
-            </p>
-          )}
-        </div>
+            {/* Số điện thoại */}
+            <div>
+              <div
+                ref={phoneWrapRef}
+                className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
+                style={{ backgroundImage: fieldBg }}
+              >
+                <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
+                <input
+                  id="phone"
+                  inputMode="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="SỐ ĐIỆN THOẠI"
+                  className="font-bold uppercase [&::placeholder]:font-normal absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none text-white placeholder-white/70 text-center leading-none"
+                  style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
+                  autoComplete="tel"
+                  enterKeyHint="done"
+                />
+              </div>
+              {!phoneValid && phone.length > 0 && (
+                <p className="mt-1 text-xs sm:text-sm text-red-300">
+                  Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).
+                </p>
+              )}
+            </div>
 
-        {/* Nút gửi */}
-        <button
-          type="submit"
-          disabled={!canSubmit}
-          className="w-full flex items-center justify-center"
-          title={canSubmit ? "Xác nhận tham gia" : "Vui lòng nhập đủ thông tin hợp lệ"}
-        >
-          <img
-            src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Gui.png"
-            alt="Xác nhận tham gia"
-            className={`h-auto select-none transition
-                       w-40 sm:w-56 md:w-64 lg:w-72
-                       ${canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"}`}
-            draggable={false}
-          />
-        </button>
-      </form>
+            {/* Nút gửi */}
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className="w-full flex items-center justify-center"
+              title={canSubmit ? "Xác nhận tham gia" : "Vui lòng nhập đủ thông tin hợp lệ"}
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Gui.png"
+                alt="Xác nhận tham gia"
+                className={`h-auto select-none transition w-40 sm:w-56 md:w-64 lg:w-72 ${
+                  canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"
+                }`}
+                draggable={false}
+              />
+            </button>
+          </form>
+        </div>
+      </div>
 
       {/* Overlay Loading */}
       {loading && (
         <div className="fixed inset-0 bg-black/40 flex flex-col items-center justify-center z-50">
           <Loader2 className="w-12 h-12 animate-spin text-white" />
-          <span className="mt-4 text-lg font-semibold text-white">Đang gửi…</span>
+          <span className="mt-4 text-lg font-semibold text-white">Đang gửi...</span>
         </div>
       )}
     </>
