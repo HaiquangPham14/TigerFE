@@ -39,6 +39,19 @@ body {
   overflow: visible; /* Cho phép nội dung tràn ra ngoài */
 }
 
+/* container scroll của form */
+.form-scroll {
+  height: var(--vvh);
+  overflow-y: auto;
+  /* thêm đệm phía dưới = chiều cao bàn phím + 16px */
+  scroll-padding-bottom: calc(var(--kb) + 16px);
+}
+
+/* riêng từng input cũng có margin cho scrollIntoView */
+input, textarea, select {
+  scroll-margin-bottom: calc(var(--kb) + 16px);
+}
+
 /* Fallback cho trình duyệt chưa có dvh */
 @supports not (height: 100dvh) {
   .app-fixed { min-height: 100svh; }
