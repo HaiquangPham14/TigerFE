@@ -4,12 +4,7 @@
 @tailwind utilities;
 
 :root { color-scheme: light; }
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 100%;
-}
+
 /* Hero background: mặc định ảnh dọc (mobile/portrait) */
 .bg-hero {
   background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
