@@ -14,45 +14,34 @@ export default function Confirm() {
     check();
     window.addEventListener("resize", check);
     window.addEventListener("orientationchange", check);
-
-    // Khóa cuộn khi đứng ở trang này (mobile), desktop để nguyên
-    const prevHtmlOverflow = document.documentElement.style.overflow;
-    const prevBodyOverflow = document.body.style.overflow;
-    if (!isDesktop) {
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-    }
-
     return () => {
       window.removeEventListener("resize", check);
       window.removeEventListener("orientationchange", check);
-      // document.documentElement.style.overflow = prevHtmlOverflow;
-      // document.body.style.overflow = prevBodyOverflow;
     };
-  }, [isDesktop]);
+  }, []);
+
+  const BG = "https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png";
 
   return (
     <div
-      className="fixed inset-0"
+      className="relative w-full min-h-screen overflow-y-auto"
       style={{
-        height: "100dvh",
-        width: "100vw",
-        backgroundImage:
-          "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png')",
-        backgroundSize: isDesktop ? "contain" : "100% 100%",  // desktop = contain, mobile = 100% 100%
+        backgroundImage: `url("${BG}")`,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundColor: isDesktop ? "#102677" : "transparent", // desktop nền xanh
-        overscrollBehavior: "auto",
-        touchAction: "manipulation",
+        backgroundSize: isDesktop ? "contain" : "100% 100%",
+        backgroundColor: isDesktop ? "#102677" : "transparent",
       }}
     >
-      {/* Nút Tiếp tục: giữ logic điều hướng, neo đáy có safe-area */}
+      {/* Spacer để đảm bảo có chiều cao đủ hiển thị ảnh (và cho phép cuộn nếu cần) */}
+      <div className="h-[100dvh]" />
+
+      {/* Nút dính theo ảnh: absolute trong container (KHÔNG fixed nữa) */}
       <button
         onClick={() => navigate("/app")}
         className="absolute left-1/2 -translate-x-1/2"
         style={{
-          bottom: "calc(env(safe-area-inset-bottom, 0px) + 8dvh)",
+          bottom: "calc(env(safe-area-inset-bottom, 0px) + 8vh)",
         }}
       >
         <img
@@ -62,7 +51,7 @@ export default function Confirm() {
         />
       </button>
 
-      {/* Overlay xoay ngang: chỉ hiện trên mobile */}
+      {/* Cảnh báo xoay dọc (đi chung trong container) */}
       {isLandscape && !isDesktop && (
         <div className="absolute inset-0 bg-[#102677] flex items-center justify-center z-50">
           <p className="text-white text-lg font-bold text-center px-4">
