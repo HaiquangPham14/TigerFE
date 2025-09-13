@@ -5,31 +5,37 @@
 
 :root { color-scheme: light; }
 
-/* Hero background */
+/* Hero background - cho phép cuộn */
 .bg-hero {
   background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: scroll; /* Thay vì fixed, cho phép background cuộn theo */
 }
 
-/* ✅ Cho phép scroll dọc, bỏ khóa */
+/* ✅ Cho phép scroll dọc hoàn toàn tự do */
 html, body, #root {
-  min-height: 100%;
-  overflow-x: hidden;      /* chỉ chặn tràn ngang */
-  /* overflow-y: auto;  (mặc định đã auto) */
+  height: auto; /* Thay vì min-height: 100% */
+  overflow: visible; /* Bỏ overflow-x: hidden để thoải mái hơn */
   overscroll-behavior: auto;
   touch-action: auto;
 }
-/* ❌ BỎ hack cố định body */
-body { position: static; width: auto; }
 
-/* ✅ Đổi app-fixed để không chặn scroll nữa */
+body { 
+  position: static; 
+  width: auto; 
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ App container cho phép nội dung dài hơn viewport */
 .app-fixed {
-  position: relative;      /* trước là fixed */
+  position: relative;
   inset: auto;
-  min-height: 100dvh;      /* đủ cao theo viewport, vẫn cho nội dung dài hơn */
+  min-height: 100dvh; /* Tối thiểu bằng viewport, nhưng có thể dài hơn */
   width: 100%;
+  overflow: visible; /* Cho phép nội dung tràn ra ngoài */
 }
 
 /* Fallback cho trình duyệt chưa có dvh */
