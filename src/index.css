@@ -11,7 +11,7 @@
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: local; /* không khóa theo viewport, để người dùng cuộn bình thường */
+  background-attachment: fixed; /* không khóa theo viewport, để người dùng cuộn bình thường */
 }
 
 /* ✅ Cho phép scroll dọc hoàn toàn tự do */
