@@ -5,111 +5,53 @@
 
 :root { color-scheme: light; }
 
-/* Hero background - responsive với viewport động */
+/* Hero background - cho phép cuộn */
 .bg-hero {
-  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/newV3%20cut.png");
-  /* Thay đổi background-size để ảnh hiển thị hoàn toàn trong container */
-  background-size: contain; /* contain sẽ giữ tỷ lệ và hiển thị toàn bộ ảnh */
+  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: scroll;
-  /* Đảm bảo chiều cao tối thiểu bằng viewport thực tế */
-  min-height: 80dvh;
-}
-
-/* Fallback cho trình duyệt không hỗ trợ dvh */
-@supports not (height: 80dvh) {
-  .bg-hero {
-    min-height: 80vh;
-  }
+  background-attachment: scroll; /* Thay vì fixed, cho phép background cuộn theo */
 }
 
 /* ✅ Cho phép scroll dọc hoàn toàn tự do */
 html, body, #root {
-  height: auto;
-  overflow: visible;
+  height: auto; /* Thay vì min-height: 100% */
+  overflow: visible; /* Bỏ overflow-x: hidden để thoải mái hơn */
   overscroll-behavior: auto;
   touch-action: auto;
-  margin: 0;
-  padding: 0;
 }
 
 body { 
   position: static; 
   width: auto; 
+  margin: 0;
+  padding: 0;
 }
 
 /* ✅ App container cho phép nội dung dài hơn viewport */
 .app-fixed {
   position: relative;
   inset: auto;
-  min-height: 80dvh;
+  min-height: 100dvh; /* Tối thiểu bằng viewport, nhưng có thể dài hơn */
   width: 100%;
-  overflow: visible;
+  overflow: visible; /* Cho phép nội dung tràn ra ngoài */
 }
 
-/* container scroll của form */
-.form-scroll {
-  height: var(--vvh, 80dvh);
-  overflow-y: auto;
-  scroll-padding-bottom: calc(var(--kb, 0px) + 16px);
-}
-
-/* riêng từng input cũng có margin cho scrollIntoView */
-input, textarea, select {
-  scroll-margin-bottom: calc(var(--kb, 0px) + 16px);
-}
-
-/* Điều chỉnh cho mobile - tránh bị che bởi browser UI */
-@media (max-width: 768px) {
-  .bg-hero {
-    min-height: 80svh; /* Thay đổi từ 100svh thành 80svh */
-    background-size: contain; /* Giữ contain để ảnh hiển thị hoàn toàn */
-    background-position: center center;
-  }
-  
-  /* Đảm bảo content không bị che */
-  .app-fixed {
-    min-height: 80svh; /* Thay đổi từ 100svh thành 80svh */
-    padding-top: env(safe-area-inset-top, 0);
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-}
-
-/* Cho màn hình rất nhỏ */
-@media (max-width: 480px) and (max-height: 700px) {
-  .bg-hero {
-    background-size: contain; /* Giữ contain thay vì 100% auto */
-    min-height: 80lvh; /* Thay đổi từ 100lvh thành 80lvh */
-  }
+/* Fallback cho trình duyệt chưa có dvh */
+@supports not (height: 100dvh) {
+  .app-fixed { min-height: 100svh; }
 }
 
 /* Ảnh nền theo orientation */
 @media (orientation: landscape) {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-    background-size: contain; /* Thay đổi từ 100% 100% thành contain */
   }
 }
-
 @media (min-width: 768px) {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-    background-size: contain; /* Thay đổi từ 100% 100% thành contain */
-    min-height: 80vh; /* Thay đổi từ 100vh thành 80vh */
-  }
-}
-
-/* Đặc biệt cho iOS Safari */
-@supports (-webkit-touch-callout: none) {
-  .bg-hero {
-    min-height: -webkit-fill-available;
-  }
-  
-  @media (max-width: 768px) {
-    .bg-hero {
-      background-attachment: scroll;
-    }
   }
 }
 
