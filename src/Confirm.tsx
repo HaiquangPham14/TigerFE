@@ -26,8 +26,8 @@ export default function Confirm() {
     return () => {
       window.removeEventListener("resize", check);
       window.removeEventListener("orientationchange", check);
-      document.documentElement.style.overflow = prevHtmlOverflow;
-      document.body.style.overflow = prevBodyOverflow;
+      // document.documentElement.style.overflow = prevHtmlOverflow;
+      // document.body.style.overflow = prevBodyOverflow;
     };
   }, [isDesktop]);
 
