@@ -31,14 +31,16 @@ export function RegisterScreen({
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // nhóm "2 input" sẽ được dịch bằng translateY để canh 50% màn hình khi focus
+  const fieldsWrapRef = useRef<HTMLDivElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [shiftY, setShiftY] = useState(0); // px
+
   // đo chiều cao khung nền mỗi field để scale font-size tương ứng
   const nameWrapRef = useRef<HTMLDivElement | null>(null);
   const phoneWrapRef = useRef<HTMLDivElement | null>(null);
 
-  // container cuộn chính
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-
-  // cập nhật --fieldH theo chiều cao khung nền
+  // cập nhật --fieldH theo chiều cao khung nền (để font-size theo ảnh)
   useEffect(() => {
     const els = [nameWrapRef.current, phoneWrapRef.current].filter(
       (x): x is HTMLDivElement => !!x
@@ -59,31 +61,24 @@ export function RegisterScreen({
     };
   }, []);
 
-  // Tính chiều cao bàn phím và chiều cao visual viewport để thêm đệm cuộn
-  useEffect(() => {
-    const vv = (window as any).visualViewport as VisualViewport | undefined;
-    if (!vv) return;
+  // canh input đang focus vào 50% chiều cao màn hình (visual viewport center)
+  const centerActiveInput = (target?: HTMLElement) => {
+    const act = target ?? (document.activeElement as HTMLElement | null);
+    if (!act || !formRef.current) return;
+    if (!formRef.current.contains(act)) return;
 
-    const applyInsets = () => {
-      const kb = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
-      document.documentElement.style.setProperty("--kb", `${kb}px`);
-      document.documentElement.style.setProperty("--vvh", `${vv.height}px`);
-      if (scrollRef.current) {
-        scrollRef.current.style.paddingBottom = `calc(${kb}px + 16px)`;
-        (scrollRef.current.style as any).height = `var(--vvh)`; // chiều cao theo visual viewport
-      }
-    };
+    const rect = act.getBoundingClientRect();
+    const vv: VisualViewport | undefined = (window as any).visualViewport;
+    const vvTop = vv ? vv.offsetTop : 0;
+    const vvH = vv ? vv.height : window.innerHeight;
+    const elCenter = rect.top + rect.height / 2;
+    const targetCenter = vvTop + vvH * 0.5;
 
-    applyInsets();
-    vv.addEventListener("resize", applyInsets);
-    vv.addEventListener("scroll", applyInsets);
-    return () => {
-      vv.removeEventListener("resize", applyInsets);
-      vv.removeEventListener("scroll", applyInsets);
-    };
-  }, []);
+    const delta = elCenter - targetCenter; // dương: el đang thấp hơn tâm → đẩy khối fields lên
+    setShiftY((prev) => prev - delta);
+  };
 
-  // Khi focus input -> đặt ô nhập vào 50% chiều cao màn hình (center)
+  // khi focus vào input → căn giữa
   useEffect(() => {
     const onFocus = (e: Event) => {
       const el = e.target as HTMLElement | null;
@@ -91,31 +86,43 @@ export function RegisterScreen({
       const tag = (el.tagName || "").toLowerCase();
       if (tag !== "input" && tag !== "textarea" && !el.isContentEditable) return;
 
-      // chờ 1 nhịp cho bàn phím mở xong rồi mới cuộn
+      // đợi 1 nhịp cho bàn phím/viewport ổn định rồi mới canh
+      setTimeout(() => centerActiveInput(el), 60);
+    };
+
+    const onBlur = () => {
+      // nếu không còn focus trong form thì trả về vị trí gốc
       setTimeout(() => {
-        try {
-          el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
-        } catch {
-          // Fallback thủ công nếu trình duyệt không hỗ trợ block:"center"
-          const sc = scrollRef.current;
-          if (!sc) return;
-          const rect = el.getBoundingClientRect();
-          const scRect = sc.getBoundingClientRect();
-
-          // dùng visual viewport nếu có, để tính đúng 50% vùng còn lại
-          const vv = (window as any).visualViewport as VisualViewport | undefined;
-          const vvH = vv ? vv.height : scRect.height;
-          const elCenter = rect.top + rect.height / 2;
-          const targetCenter = (vv ? vv.offsetTop : scRect.top) + vvH * 0.5;
-
-          const delta = elCenter - targetCenter;
-          sc.scrollBy({ top: delta, behavior: "smooth" });
-        }
+        const ae = document.activeElement as HTMLElement | null;
+        if (!formRef.current) return;
+        if (!ae || !formRef.current.contains(ae)) setShiftY(0);
       }, 60);
     };
 
     document.addEventListener("focusin", onFocus);
-    return () => document.removeEventListener("focusin", onFocus);
+    document.addEventListener("focusout", onBlur);
+    return () => {
+      document.removeEventListener("focusin", onFocus);
+      document.removeEventListener("focusout", onBlur);
+    };
+  }, []);
+
+  // khi visual viewport đổi (mở/đóng bàn phím) mà vẫn đang focus → giữ input ở 50%
+  useEffect(() => {
+    const vv: VisualViewport | undefined = (window as any).visualViewport;
+    if (!vv) return;
+    const rebalance = () => {
+      const ae = document.activeElement as HTMLElement | null;
+      if (ae && formRef.current?.contains(ae)) {
+        centerActiveInput(ae);
+      }
+    };
+    vv.addEventListener("resize", rebalance);
+    vv.addEventListener("scroll", rebalance);
+    return () => {
+      vv.removeEventListener("resize", rebalance);
+      vv.removeEventListener("scroll", rebalance);
+    };
   }, []);
 
   const nameValid = fullName.trim().length >= 8;
@@ -147,18 +154,32 @@ export function RegisterScreen({
     void trySubmit();
   }
 
+  // ảnh nền ô điền
   const fieldBg =
     "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/HotenSDT.png')";
 
   return (
     <>
-      {/* Vùng scroll chính của form */}
-      <div ref={scrollRef} className="absolute inset-0 overflow-y-auto">
+      {/* KHÔNG dùng scroll, cố định theo hình toàn bộ */}
+      {/* Nhóm 2 input: đặt tuyệt đối theo viewport, mặc định tại ~60dvh */}
+      <div
+        ref={fieldsWrapRef}
+        className="absolute w-full"
+        style={{
+          top: "60dvh",            // vị trí gốc theo hình (chỉnh số này nếu cần)
+          left: 0,
+          right: 0,
+          transform: `translateY(${shiftY}px)`,
+          transition: "transform 220ms ease",
+          willChange: "transform",
+        }}
+      >
         <form
+          ref={formRef}
           onSubmit={handleSubmit}
           // GIỮ NGUYÊN FONT CŨ
-          className="font-barlow absolute left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
-          style={{ top: "60vh", width: "80%" }}
+          className="font-barlow mx-auto text-white space-y-5 sm:space-y-6"
+          style={{ width: "80%" }}
         >
           {/* Họ và tên */}
           <div>
@@ -167,6 +188,7 @@ export function RegisterScreen({
               className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
               style={{ backgroundImage: fieldBg }}
             >
+              {/* giữ tỉ lệ nền theo file cũ */}
               <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
               <input
                 id="fullName"
@@ -177,8 +199,7 @@ export function RegisterScreen({
                            absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
                            text-white placeholder-white/70 text-center leading-none"
                 style={{
-                  fontSize: "calc(var(--fieldH) * 0.5)",
-                  scrollMarginBottom: "calc(var(--kb, 0px) + 16px)",
+                  fontSize: "calc(var(--fieldH) * 0.5)", // theo chiều cao nền
                 } as React.CSSProperties}
                 autoComplete="name"
               />
@@ -209,7 +230,6 @@ export function RegisterScreen({
                            text-white placeholder-white/70 text-center leading-none"
                 style={{
                   fontSize: "calc(var(--fieldH) * 0.5)",
-                  scrollMarginBottom: "calc(var(--kb, 0px) + 16px)",
                 } as React.CSSProperties}
                 autoComplete="tel"
               />
@@ -220,16 +240,16 @@ export function RegisterScreen({
               </p>
             )}
           </div>
-
-          {/* spacer để nội dung dưới không bị che (tùy chọn) */}
-          <div className="h-24" />
         </form>
       </div>
 
-      {/* Nút Gửi cố định theo hình (căn giữa, ở ~82% chiều cao màn hình) */}
+      {/* Nút Gửi: cố định riêng theo hình (không bị ảnh hưởng bởi shiftY của nhóm input) */}
       <div
-        className="absolute left-1/2 -translate-x-1/2"
-        style={{ top: "82dvh" }} // 82% chiều cao màn hình; chỉnh số này nếu cần khớp vị trí thiết kế
+        className="absolute left-1/2"
+        style={{
+          top: "82dvh",                    // vị trí theo hình; chỉnh nếu cần
+          transform: "translateX(-50%)",
+        }}
       >
         <button
           onClick={trySubmit}
