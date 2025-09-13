@@ -35,7 +35,7 @@ export function AgeScreen({
           className="mb-4 w-48 sm:w-64 md:w-80 lg:w-96 h-auto pointer-events-none"
         />
 
-        <div className="flex items-center justify-center gap-6 mb-6">
+        <div className="flex items-center justify-center gap-6 mb-4">
           <button
             type="button"
             onClick={handleBack}
@@ -45,7 +45,7 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Chua.png"
               alt="Chưa đủ"
-              className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 select-none"
+              className="w-28 sm:w-36 md:w-44 lg:w-52 h-auto select-none"
               onClick={handleBack}
               draggable={false}
             />
@@ -60,7 +60,7 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Roi.png"
               alt="Đủ tuổi"
-              className={`w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 transition select-none ${
+              className={`w-28 sm:w-36 md:w-44 lg:w-52 h-auto transition select-none ${
                 canContinue ? "" : "grayscale opacity-60 cursor-not-allowed"
               }`}
               onClick={canContinue ? onOk : undefined}
@@ -69,7 +69,8 @@ export function AgeScreen({
           </button>
         </div>
 
-        <div className="space-y-3 sm:space-y-4 w-[85%] sm:w-[80%] mx-auto text-xs xs:text-sm sm:text-base md:text-lg">
+        {/* Thu nhỏ chữ và ô tích V */}
+        <div className="space-y-3 sm:space-y-4 w-[85%] sm:w-[80%] mx-auto text-[11px] sm:text-xs md:text-sm lg:text-base leading-tight">
           <label className="flex items-start gap-2 sm:gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -78,15 +79,15 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9
+              className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree1 && (
-                <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400 drop-shadow" />
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 drop-shadow" />
               )}
             </div>
-            <span className="leading-tight">
+            <span>
               Tôi đồng ý với{" "}
               <a
                 href="https://docs.google.com/document/d/1dg6DK_tkj3g4L22l4ZVKPTzoMISyKdck/view"
@@ -107,15 +108,15 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9
+              className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree2 && (
-                <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400 drop-shadow" />
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 drop-shadow" />
               )}
             </div>
-            <span className="leading-tight">
+            <span>
               Tôi đồng ý cho HEINEKEN Việt Nam xử lý các thông tin cá nhân của tôi
               cho mục đích tiếp thị, phân tích nội bộ, chăm sóc khách hàng và các
               mục đích khác: cụ thể xem chi tiết ở{" "}
