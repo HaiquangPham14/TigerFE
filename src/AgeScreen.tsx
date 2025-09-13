@@ -24,13 +24,11 @@ export function AgeScreen({
   };
 
   return (
-    // Đổi từ fixed sang absolute để theo container cha
     <div className="absolute inset-0 text-white overflow-visible z-50">
       <div
         className="absolute left-0 w-full px-4 sm:px-6 flex flex-col items-center pointer-events-auto"
-        style={{ top: "60vh" }} // Đổi từ svh sang vh thông thường
+        style={{ top: "60vh" }}
       >
-        {/* Phần còn lại giữ nguyên */}
         <img
           src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/B%E1%BA%A0N%20%C4%90%C3%83%20%C4%90%E1%BB%A6%2018%20TU%E1%BB%94I_.png"
           alt="Bạn đã đủ 18 tuổi"
@@ -47,7 +45,7 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Chua.png"
               alt="Chưa đủ"
-              className="w-28 sm:w-36 md:w-44 lg:w-52 h-auto select-none"
+              className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 select-none"
               onClick={handleBack}
               draggable={false}
             />
@@ -62,7 +60,7 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Roi.png"
               alt="Đủ tuổi"
-              className={`w-28 sm:w-36 md:w-44 lg:w-52 h-auto transition select-none ${
+              className={`w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 transition select-none ${
                 canContinue ? "" : "grayscale opacity-60 cursor-not-allowed"
               }`}
               onClick={canContinue ? onOk : undefined}
@@ -71,9 +69,8 @@ export function AgeScreen({
           </button>
         </div>
 
-        <div className="space-y-5 w-[85%] sm:w-[80%] mx-auto text-xs sm:text-sm md:text-base lg:text-lg">
-          {/* Phần điều khoản giữ nguyên */}
-          <label className="flex items-start gap-3 cursor-pointer select-none">
+        <div className="space-y-3 sm:space-y-4 w-[85%] sm:w-[80%] mx-auto text-xs xs:text-sm sm:text-base md:text-lg">
+          <label className="flex items-start gap-2 sm:gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={agree1}
@@ -81,15 +78,15 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12
+              className="flex-shrink-0 w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree1 && (
-                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-400 drop-shadow" />
+                <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400 drop-shadow" />
               )}
             </div>
-            <span>
+            <span className="leading-tight">
               Tôi đồng ý với{" "}
               <a
                 href="https://docs.google.com/document/d/1dg6DK_tkj3g4L22l4ZVKPTzoMISyKdck/view"
@@ -102,7 +99,7 @@ export function AgeScreen({
             </span>
           </label>
 
-          <label className="flex items-start gap-3 cursor-pointer select-none">
+          <label className="flex items-start gap-2 sm:gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={agree2}
@@ -110,15 +107,15 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12
+              className="flex-shrink-0 w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree2 && (
-                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-400 drop-shadow" />
+                <CheckCircle className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-400 drop-shadow" />
               )}
             </div>
-            <span>
+            <span className="leading-tight">
               Tôi đồng ý cho HEINEKEN Việt Nam xử lý các thông tin cá nhân của tôi
               cho mục đích tiếp thị, phân tích nội bộ, chăm sóc khách hàng và các
               mục đích khác: cụ thể xem chi tiết ở{" "}

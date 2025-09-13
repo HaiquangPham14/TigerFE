@@ -3,16 +3,6 @@ import { Loader2 } from "lucide-react";
 
 const API_BASE = "https://tigerbeer2025.azurewebsites.net/api";
 
-function getOrCreateDeviceId() {
-  const KEY = "tiger_device_id";
-  let id = localStorage.getItem(KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(KEY, id);
-  }
-  return id;
-}
-
 async function postJson(path: string, data: unknown) {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
@@ -37,7 +27,6 @@ export function RegisterScreen({
   onSuccess: () => void;
   onError: (msg: string) => void;
 }) {
-  const deviceId = useMemo(() => getOrCreateDeviceId(), []);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -89,7 +78,6 @@ export function RegisterScreen({
       await postJson("/TigerCustomers/verify-and-register", {
         fullName: fullName.trim(),
         phoneNumber: phoneTrim,
-        deviceId,
       });
       onSuccess();
     } catch (err: any) {
