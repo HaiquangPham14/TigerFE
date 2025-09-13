@@ -12,7 +12,28 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+/* iOS đôi lúc vẫn kéo nền: */
+body { position: fixed; width: 100%; }
 
+
+/* Lớp tiện ích cho khung app cố định toàn màn hình */
+.app-fixed {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;        /* ưu tiên đơn vị ổn định trên mobile */
+  width: 100vw;
+}
+
+/* Fallback cho trình duyệt chưa có dvh */
+@supports not (height: 100dvh) {
+  .app-fixed { height: 100svh; } /* hoặc 100vh nếu cần */
+}
 /* Nếu màn hình nằm ngang (landscape) -> dùng ảnh ngang */
 @media (orientation: landscape) {
   .bg-hero {
