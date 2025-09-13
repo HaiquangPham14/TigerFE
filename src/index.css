@@ -13,11 +13,11 @@
   background-repeat: no-repeat;
   background-attachment: scroll;
   /* Đảm bảo chiều cao tối thiểu bằng viewport thực tế */
-  min-height: 100dvh;
+  min-height: 80dvh;
 }
 
 /* Fallback cho trình duyệt không hỗ trợ dvh */
-@supports not (height: 100dvh) {
+@supports not (height: 80dvh) {
   .bg-hero {
     min-height: 100vh;
   }
@@ -42,14 +42,14 @@ body {
 .app-fixed {
   position: relative;
   inset: auto;
-  min-height: 100dvh;
+  min-height: 80dvh;
   width: 100%;
   overflow: visible;
 }
 
 /* container scroll của form */
 .form-scroll {
-  height: var(--vvh, 100dvh);
+  height: var(--vvh, 80dvh);
   overflow-y: auto;
   scroll-padding-bottom: calc(var(--kb, 0px) + 16px);
 }
