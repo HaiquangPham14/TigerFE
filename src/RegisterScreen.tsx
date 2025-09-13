@@ -37,13 +37,21 @@ export function RegisterScreen({
 
   // 1) Khóa chiều cao app theo chiều cao LẦN ĐẦU (để bàn phím đè lên, không đẩy layout)
   useEffect(() => {
+    // Lấy chiều cao ban đầu khi vào màn
     const initialH = window.innerHeight;
     document.documentElement.style.setProperty("--appH", `${initialH}px`);
+
+    // Giữ cuộn ở top khi focus input (Safari iOS hay cố kéo layout)
+    const keepTop = () => {
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("focusin", keepTop);
+
     return () => {
+      window.removeEventListener("focusin", keepTop);
       document.documentElement.style.removeProperty("--appH");
     };
   }, []);
-
 
   // 2) Đo & set biến --fieldH theo chiều cao container, cập nhật khi resize
   useEffect(() => {
@@ -199,7 +207,7 @@ export function RegisterScreen({
       {loading && (
         <div className="fixed inset-0 bg-black/40 flex flex-col items-center justify-center z-50">
           <Loader2 className="w-12 h-12 animate-spin text-white" />
-          <span className="mt-4 text-lg font-semibold text-white">Đang gửi…</span>
+          <span className="mt-4 text-lg font-semibold text-white">Đang gửi...</span>
         </div>
       )}
     </>
