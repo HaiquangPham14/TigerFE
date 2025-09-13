@@ -7,11 +7,11 @@ export function AgeScreen({
   onBack,
 }: {
   onOk: () => void;
-  onBack?: () => void; // cho phép optional
+  onBack?: () => void;
 }) {
   const [agree1, setAgree1] = useState(false);
   const [agree2, setAgree2] = useState(false);
-  const navigate = useNavigate(); // <<<<<< THÊM DÒNG NÀY
+  const navigate = useNavigate();
 
   const canContinue = agree1 && agree2;
 
@@ -20,26 +20,24 @@ export function AgeScreen({
 
   const handleBack = () => {
     if (onBack) onBack();
-    else navigate("/"); // fallback: quay về trang Confirm
+    else navigate("/");
   };
 
   return (
-    // Tăng z-index để luôn nằm trên mọi overlay/background
-    <div className="fixed inset-0 text-white overflow-hidden z-50">
+    // Đổi từ fixed sang absolute để theo container cha
+    <div className="absolute inset-0 text-white overflow-visible z-50">
       <div
         className="absolute left-0 w-full px-4 sm:px-6 flex flex-col items-center pointer-events-auto"
-        style={{ top: "60svh" }}
+        style={{ top: "60vh" }} // Đổi từ svh sang vh thông thường
       >
-        {/* Ảnh banner phía trên nút */}
+        {/* Phần còn lại giữ nguyên */}
         <img
           src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/B%E1%BA%A0N%20%C4%90%C3%83%20%C4%90%E1%BB%A6%2018%20TU%E1%BB%94I_.png"
           alt="Bạn đã đủ 18 tuổi"
           className="mb-4 w-48 sm:w-64 md:w-80 lg:w-96 h-auto pointer-events-none"
         />
 
-        {/* Hàng nút Back + Tiếp tục */}
         <div className="flex items-center justify-center gap-6 mb-6">
-          {/* Back */}
           <button
             type="button"
             onClick={handleBack}
@@ -50,12 +48,11 @@ export function AgeScreen({
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Chua.png"
               alt="Chưa đủ"
               className="w-28 sm:w-36 md:w-44 lg:w-52 h-auto select-none"
-              onClick={handleBack} // click trực tiếp trên ảnh
+              onClick={handleBack}
               draggable={false}
             />
           </button>
 
-          {/* Continue */}
           <button
             type="button"
             onClick={canContinue ? onOk : undefined}
@@ -74,9 +71,8 @@ export function AgeScreen({
           </button>
         </div>
 
-        {/* Điều khoản */}
         <div className="space-y-5 w-[85%] sm:w-[80%] mx-auto text-xs sm:text-sm md:text-base lg:text-lg">
-          {/* Điều khoản 1 */}
+          {/* Phần điều khoản giữ nguyên */}
           <label className="flex items-start gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -106,7 +102,6 @@ export function AgeScreen({
             </span>
           </label>
 
-          {/* Điều khoản 2 */}
           <label className="flex items-start gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
