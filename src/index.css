@@ -1,5 +1,28 @@
+/* index.css (giữ 3 dòng Tailwind ở đầu như cũ) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root { color-scheme: light; }
+
+/* Hero background: mặc định ảnh dọc (mobile/portrait) */
+.bg-hero {
+  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Nếu màn hình nằm ngang (landscape) -> dùng ảnh ngang */
+@media (orientation: landscape) {
+  .bg-hero {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
+  }
+}
+
+/* Dự phòng cho PC/tablet (nếu trình duyệt không báo orientation) */
+@media (min-width: 768px) {
+  .bg-hero {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
+  }
+}
