@@ -11,7 +11,8 @@ export default function App() {
   const [error, setError] = useState("");
 
   return (
-    <div className="bg-hero app-fixed min-w-[320px] w-full">
+    <div className="bg-hero min-w-[320px] w-full">
+      {/* Thay đổi từ min-h-[100dvh] thành min-h-screen để tự nhiên hơn */}
       <div className="relative min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:px-12 lg:py-16">
         <AnimatePresence mode="wait" initial={false}>
           {step === "age" && <AgeScreen onOk={() => setStep("register")} />}
