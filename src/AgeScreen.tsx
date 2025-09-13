@@ -35,6 +35,7 @@ export function AgeScreen({
           className="mb-4 w-48 sm:w-64 md:w-80 lg:w-96 h-auto pointer-events-none"
         />
 
+        {/* Hai nút giữ nguyên kích thước gốc */}
         <div className="flex items-center justify-center gap-6 mb-4">
           <button
             type="button"
@@ -69,8 +70,9 @@ export function AgeScreen({
           </button>
         </div>
 
-        {/* Thu nhỏ chữ và ô tích V */}
-        <div className="space-y-3 sm:space-y-4 w-[85%] sm:w-[80%] mx-auto text-[11px] sm:text-xs md:text-sm lg:text-base leading-tight">
+        {/* Ô tích & điều khoản - giảm 30% + responsive */}
+        <div className="space-y-3 sm:space-y-4 w-[90%] sm:w-[80%] mx-auto 
+                        text-[10px] sm:text-xs md:text-sm lg:text-base leading-tight">
           <label className="flex items-start gap-2 sm:gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -79,12 +81,12 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8
+              className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree1 && (
-                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 drop-shadow" />
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 drop-shadow" />
               )}
             </div>
             <span>
@@ -108,12 +110,12 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8
+              className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6
                          flex items-center justify-center bg-center bg-contain bg-no-repeat"
               style={{ backgroundImage: checkBg }}
             >
               {agree2 && (
-                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 drop-shadow" />
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 drop-shadow" />
               )}
             </div>
             <span>
