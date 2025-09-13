@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, CSSProperties } from "react";
+import { useEffect, useState } from "react";
 
 export default function Confirm() {
   const navigate = useNavigate();
@@ -7,57 +7,62 @@ export default function Confirm() {
   const [isLandscape, setIsLandscape] = useState(false);
 
   useEffect(() => {
-    const checkDevice = () => {
+    const check = () => {
       setIsDesktop(window.innerWidth >= 1024);
       setIsLandscape(window.innerWidth > window.innerHeight);
     };
-    checkDevice();
-    window.addEventListener("resize", checkDevice);
-    window.addEventListener("orientationchange", checkDevice);
+    check();
+    window.addEventListener("resize", check);
+    window.addEventListener("orientationchange", check);
+
+    // Khóa cuộn khi đứng ở trang này (mobile), desktop để nguyên
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    if (!isDesktop) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    }
+
     return () => {
-      window.removeEventListener("resize", checkDevice);
-      window.removeEventListener("orientationchange", checkDevice);
+      window.removeEventListener("resize", check);
+      window.removeEventListener("orientationchange", check);
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
     };
-  }, []);
-
-  // ↓↓↓ CHỈ BỔ SUNG: làm nút responsive theo màn hình, vẫn giữ hành vi cũ
-  const bottomOffsetMobile = "calc(env(safe-area-inset-bottom, 0px) + clamp(24px, 8vh, 72px))";
-  const buttonWidth = isDesktop
-    ? "clamp(220px, 20vw, 360px)"   // desktop: to/nhỏ theo chiều ngang
-    : "clamp(180px, 42vw, 300px)";  // mobile: co giãn theo màn hình
-
-  const buttonPosStyle: CSSProperties = isDesktop
-    ? { top: "80%" }                   // giữ “kiểu cũ” desktop dùng top %
-    : { bottom: bottomOffsetMobile };  // mobile bám đáy, chừa safe-area
-  // ↑↑↑ HẾT PHẦN BỔ SUNG
+  }, [isDesktop]);
 
   return (
     <div
-      className="w-screen h-screen relative" // giữ nguyên
+      className="fixed inset-0"
       style={{
+        height: "100dvh",
+        width: "100vw",
         backgroundImage:
           "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png')",
-        backgroundSize: isDesktop ? "contain" : "100% 100%", // desktop cũ + mobile 100% 100%
+        backgroundSize: isDesktop ? "contain" : "100% 100%",  // desktop = contain, mobile = 100% 100%
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundColor: isDesktop ? "#102677" : "transparent",
+        backgroundColor: isDesktop ? "#102677" : "transparent", // desktop nền xanh
+        overscrollBehavior: "none",
+        touchAction: "manipulation",
       }}
     >
-      {/* Nút Tiếp tục (giữ nguyên điều hướng, chỉ thêm responsive size/pos) */}
+      {/* Nút Tiếp tục: giữ logic điều hướng, neo đáy có safe-area */}
       <button
         onClick={() => navigate("/app")}
         className="absolute left-1/2 -translate-x-1/2"
-        style={buttonPosStyle}
+        style={{
+          bottom: "calc(env(safe-area-inset-bottom, 0px) + 8dvh)",
+        }}
       >
         <img
           src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Tieptuc.png"
           alt="Tiếp tục"
-          style={{ width: buttonWidth, height: "auto" }}  // responsive kích thước
-          className="hover:scale-105 transition-transform duration-300"
+          className="w-40 md:w-56 hover:scale-105 transition-transform duration-300"
         />
       </button>
 
-      {/* Overlay khi xoay ngang (giữ nguyên logic cũ) */}
+      {/* Overlay xoay ngang: chỉ hiện trên mobile */}
       {isLandscape && !isDesktop && (
         <div className="absolute inset-0 bg-[#102677] flex items-center justify-center z-50">
           <p className="text-white text-lg font-bold text-center px-4">
@@ -68,4 +73,3 @@ export default function Confirm() {
     </div>
   );
 }
-      
