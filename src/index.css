@@ -5,19 +5,19 @@
 
 :root { color-scheme: light; }
 
-/* Hero background - cho phép cuộn */
+/* Hero background - cho phép cuộn, phủ 100% x 100% */
 .bg-hero {
   background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: scroll; /* Thay vì fixed, cho phép background cuộn theo */
+  background-attachment: scroll; /* không khóa theo viewport, để người dùng cuộn bình thường */
 }
 
 /* ✅ Cho phép scroll dọc hoàn toàn tự do */
 html, body, #root {
-  height: auto; /* Thay vì min-height: 100% */
-  overflow: visible; /* Bỏ overflow-x: hidden để thoải mái hơn */
+  height: auto;
+  overflow: visible;
   overscroll-behavior: auto;
   touch-action: auto;
 }
@@ -29,13 +29,13 @@ body {
   padding: 0;
 }
 
-/* ✅ App container cho phép nội dung dài hơn viewport */
+/* ✅ App container “nền đứng yên cảm giác”, nội dung có thể dài hơn viewport */
 .app-fixed {
   position: relative;
   inset: auto;
-  min-height: 100dvh; /* Tối thiểu bằng viewport, nhưng có thể dài hơn */
+  min-height: 100dvh;   /* tối thiểu = chiều cao viewport */
   width: 100%;
-  overflow: visible; /* Cho phép nội dung tràn ra ngoài */
+  overflow: visible;     /* cho phép nội dung tràn/scroll */
 }
 
 /* Fallback cho trình duyệt chưa có dvh */
@@ -43,7 +43,7 @@ body {
   .app-fixed { min-height: 100svh; }
 }
 
-/* Ảnh nền theo orientation */
+/* Ảnh nền theo orientation (tùy chọn) */
 @media (orientation: landscape) {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
@@ -53,16 +53,4 @@ body {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
   }
-}
-
-/* Font-face giữ nguyên */
-@font-face {
-  font-family: "BarlowCondensed";
-  src: url("/fonts/BarlowCondensed-Regular.ttf") format("truetype");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "BarlowCondensed";
-  src: url("/fonts/BarlowCondensed-Bold.ttf") format("truetype");
-  font-weight: 700; font-style: normal; font-display: swap;
 }
