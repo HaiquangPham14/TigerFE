@@ -5,9 +5,10 @@
 
 :root { color-scheme: light; }
 
-/* Hero background - cho phép cuộn */
+/* Hero background ?https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/newV3%20cut.png?- cho phép cuộn */
+/* Hero background ?https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg?- cho phép cuộn */
 .bg-hero {
-  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
+  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/newV3%20cut.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
