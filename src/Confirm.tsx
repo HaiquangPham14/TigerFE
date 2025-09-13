@@ -20,25 +20,28 @@ export default function Confirm() {
     };
   }, []);
 
+  const BG = "https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png";
+
   return (
     <div
       className="relative w-full min-h-screen overflow-y-auto"
       style={{
-        backgroundImage:
-          "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png')",
-        backgroundSize: isDesktop ? "contain" : "100% 100%",
+        backgroundImage: `url("${BG}")`,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        backgroundSize: isDesktop ? "contain" : "100% 100%",
         backgroundColor: isDesktop ? "#102677" : "transparent",
       }}
     >
+      {/* Spacer để đảm bảo có chiều cao đủ hiển thị ảnh (và cho phép cuộn nếu cần) */}
       <div className="h-[100dvh]" />
 
+      {/* Nút dính theo ảnh: absolute trong container (KHÔNG fixed nữa) */}
       <button
         onClick={() => navigate("/app")}
-        className="fixed left-1/2 -translate-x-1/2"
+        className="absolute left-1/2 -translate-x-1/2"
         style={{
-          bottom: "calc(env(safe-area-inset-bottom, 0px) + 8dvh)",
+          bottom: "calc(env(safe-area-inset-bottom, 0px) + 8vh)",
         }}
       >
         <img
@@ -48,8 +51,9 @@ export default function Confirm() {
         />
       </button>
 
+      {/* Cảnh báo xoay dọc (đi chung trong container) */}
       {isLandscape && !isDesktop && (
-        <div className="fixed inset-0 bg-[#102677] flex items-center justify-center z-50">
+        <div className="absolute inset-0 bg-[#102677] flex items-center justify-center z-50">
           <p className="text-white text-lg font-bold text-center px-4">
             Vui lòng xoay dọc màn hình để tiếp tục
           </p>
