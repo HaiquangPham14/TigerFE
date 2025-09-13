@@ -60,3 +60,25 @@ body { position: static; width: auto; }
   src: url("/fonts/BarlowCondensed-Bold.ttf") format("truetype");
   font-weight: 700; font-style: normal; font-display: swap;
 }
+
+
+/* Nền riêng cho trang Confirm */
+.bg-confirm {
+  /* Ảnh dọc (mobile/portrait) — link riêng của Confirm */
+  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Ảnh ngang (landscape / từ md trở lên) — thay link nếu bạn có file ngang riêng */
+@media (orientation: landscape) {
+  .bg-confirm {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004-ngang.jpg");
+  }
+}
+@media (min-width: 768px) {
+  .bg-confirm {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004-ngang.jpg");
+  }
+}
