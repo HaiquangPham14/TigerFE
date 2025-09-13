@@ -96,13 +96,13 @@ export function RegisterScreen({
       <form
         onSubmit={handleSubmit}
         className="font-barlow absolute left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
-        style={{ top: "60vh", width: "80%" }}
+        style={{ top: "65vh", width: "80%" }}
       >
         {/* Họ và tên */}
         <div>
           <div
             ref={nameWrapRef}
-            className="relative w-[70%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 70%
+            className="relative w-[80%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 80%
             style={{ backgroundImage: fieldBg }}
           >
             <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
@@ -129,7 +129,7 @@ export function RegisterScreen({
         <div>
           <div
             ref={phoneWrapRef}
-            className="relative w-[70%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 70%
+            className="relative w-[80%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 80%
             style={{ backgroundImage: fieldBg }}
           >
             <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
