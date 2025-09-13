@@ -1,59 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { AgeScreen } from "./AgeScreen";
+import { RegisterScreen } from "./RegisterScreen";
+import { SuccessScreen } from "./SuccessScreen";
 
-export default function Confirm() {
-  const navigate = useNavigate();
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isLandscape, setIsLandscape] = useState(false);
+type Step = "age" | "register" | "success" | "error";
 
-  useEffect(() => {
-    const checkDevice = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-      setIsLandscape(window.innerWidth > window.innerHeight);
-    };
-
-    checkDevice();
-    window.addEventListener("resize", checkDevice);
-    window.addEventListener("orientationchange", checkDevice);
-    return () => {
-      window.removeEventListener("resize", checkDevice);
-      window.removeEventListener("orientationchange", checkDevice);
-    };
-  }, []);
+export default function App() {
+  // ⚠️ Bắt đầu từ màn confirm
+  const [step, setStep] = useState<Step>("age");
+  const [error, setError] = useState("");
 
   return (
-    <div
-      className="w-screen h-screen relative"
-      style={{
-        backgroundImage:
-          "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png')",
-        backgroundSize: isDesktop ? "contain" : "100% 100%",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-        backgroundColor: isDesktop ? "#102677" : "transparent",
-      }}
-    >
-      {/* Nút Tiếp tục */}
-      <button
-        onClick={() => navigate("/app")}
-        className="absolute left-1/2 -translate-x-1/2"
-        style={{ top: "85%" }}
-      >
-        <img
-          src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Tieptuc.png"
-          alt="Tiếp tục"
-          className="w-40 md:w-56 hover:scale-105 transition-transform duration-300"
-        />
-      </button>
+    <div className="bg-hero app-fixed min-w-[320px]">
+      {/* tránh chắn click: */}
+      <div className="absolute inset-0 bg-black/30 sm:bg-black/25 md:bg-black/20 lg:bg-black/15 pointer-events-none" />
+      <div className="absolute inset-0 flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-12 lg:px-12 lg:py-16">
+        <AnimatePresence mode="wait" initial={false}>
+          {step === "age" && (
+            <AgeScreen key="age" onOk={() => setStep("register")} />
+          )}
 
-      {/* Overlay khi xoay ngang */}
-      {isLandscape && !isDesktop && (
-        <div className="absolute inset-0 bg-[#102677] flex items-center justify-center z-50">
-          <p className="text-white text-lg font-bold text-center px-4">
-            Vui lòng xoay dọc màn hình để tiếp tục
-          </p>
-        </div>
-      )}
+          {step === "register" && (
+            <RegisterScreen
+              key="register"
+              onSuccess={() => setStep("success")}
+              onError={(msg) => {
+                setError(msg);
+                alert(msg);
+              }}
+            />
+          )}
+
+          {step === "success" && <SuccessScreen key="success" />}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
