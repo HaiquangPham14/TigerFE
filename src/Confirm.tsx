@@ -24,7 +24,7 @@ export default function Confirm() {
   return (
     <>
       {/* Nền cố định */}
-      <div className="bg-hero-fixed" />
+      <div className="bg-hero" />
 
       {/* Lớp nội dung */}
       <div className="page-layer relative">

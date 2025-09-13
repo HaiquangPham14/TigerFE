@@ -24,7 +24,7 @@ body {
   touch-action: manipulation;
 }
 
-.bg-hero-fixed {
+.bg-hero {
   position: fixed;
   inset: 0;
   z-index: 0;
