@@ -1,7 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/app", "destination": "https://www.tigerstreetfootball2025.vn/" },
-    { "source": "/app/(.*)", "destination": "https://www.tigerstreetfootball2025.vn/" },
-    { "source": "/(.*)", "destination": "https://www.tigerstreetfootball2025.vn/" }
-  ]
-}
