@@ -31,53 +31,46 @@ export function RegisterScreen({
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // refs cho 2 ô nền để đo chiều cao thực tế => scale font theo chiều cao nền
+  // đo chiều cao khung nền mỗi field để scale font-size tương ứng
   const nameWrapRef = useRef<HTMLDivElement | null>(null);
   const phoneWrapRef = useRef<HTMLDivElement | null>(null);
 
-  // container scroll (để áp dụng padding-bottom theo chiều cao bàn phím)
+  // container cuộn chính
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // đo & set biến --fieldH theo chiều cao container, cập nhật khi resize
+  // cập nhật --fieldH theo chiều cao khung nền
   useEffect(() => {
     const els = [nameWrapRef.current, phoneWrapRef.current].filter(
       (x): x is HTMLDivElement => !!x
     );
-
     const update = () => {
       for (const el of els) {
-        const h = el.clientHeight; // px
+        const h = el.clientHeight;
         el.style.setProperty("--fieldH", `${h}px`);
       }
     };
-
     update();
-
     const ro = "ResizeObserver" in window ? new ResizeObserver(update) : null;
     ro && els.forEach((el) => ro.observe(el));
     window.addEventListener("resize", update);
-
     return () => {
       ro?.disconnect();
       window.removeEventListener("resize", update);
     };
   }, []);
 
-  // Cách B: dùng VisualViewport để tính chiều cao bàn phím và thêm đệm cuộn
+  // Tính chiều cao bàn phím và chiều cao visual viewport để thêm đệm cuộn
   useEffect(() => {
     const vv = (window as any).visualViewport as VisualViewport | undefined;
     if (!vv) return;
 
     const applyInsets = () => {
       const kb = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
-      // Ghi lên biến CSS để có thể dùng tiếp nếu cần
       document.documentElement.style.setProperty("--kb", `${kb}px`);
       document.documentElement.style.setProperty("--vvh", `${vv.height}px`);
-      // Thêm đệm cuộn cho container
       if (scrollRef.current) {
         scrollRef.current.style.paddingBottom = `calc(${kb}px + 16px)`;
-        // Đồng thời giới hạn chiều cao theo visual viewport để vùng này là nơi cuộn chính
-        (scrollRef.current.style as any).height = `var(--vvh)`;
+        (scrollRef.current.style as any).height = `var(--vvh)`; // chiều cao theo visual viewport
       }
     };
 
@@ -90,7 +83,7 @@ export function RegisterScreen({
     };
   }, []);
 
-  // Khi focus vào input => scrollIntoView "end" để dính ngay trên bàn phím
+  // Khi focus input -> đặt ô nhập vào 50% chiều cao màn hình (center)
   useEffect(() => {
     const onFocus = (e: Event) => {
       const el = e.target as HTMLElement | null;
@@ -98,15 +91,27 @@ export function RegisterScreen({
       const tag = (el.tagName || "").toLowerCase();
       if (tag !== "input" && tag !== "textarea" && !el.isContentEditable) return;
 
-      // Cho trình duyệt có chút thời gian mở bàn phím rồi mới cuộn
+      // chờ 1 nhịp cho bàn phím mở xong rồi mới cuộn
       setTimeout(() => {
         try {
-          el.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
+          el.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
         } catch {
-          // fallback nếu trình duyệt không hỗ trợ options
-          (el as any).scrollIntoView && (el as any).scrollIntoView();
+          // Fallback thủ công nếu trình duyệt không hỗ trợ block:"center"
+          const sc = scrollRef.current;
+          if (!sc) return;
+          const rect = el.getBoundingClientRect();
+          const scRect = sc.getBoundingClientRect();
+
+          // dùng visual viewport nếu có, để tính đúng 50% vùng còn lại
+          const vv = (window as any).visualViewport as VisualViewport | undefined;
+          const vvH = vv ? vv.height : scRect.height;
+          const elCenter = rect.top + rect.height / 2;
+          const targetCenter = (vv ? vv.offsetTop : scRect.top) + vvH * 0.5;
+
+          const delta = elCenter - targetCenter;
+          sc.scrollBy({ top: delta, behavior: "smooth" });
         }
-      }, 50);
+      }, 60);
     };
 
     document.addEventListener("focusin", onFocus);
@@ -118,8 +123,7 @@ export function RegisterScreen({
   const phoneValid = /^0\d{9}$/.test(phoneTrim) || /^\+84\d{9}$/.test(phoneTrim);
   const canSubmit = nameValid && phoneValid && !loading;
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function trySubmit() {
     if (!nameValid) return onError("Tên không hợp lệ (ít nhất 8 ký tự).");
     if (!phoneValid)
       return onError("Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).");
@@ -138,13 +142,17 @@ export function RegisterScreen({
     }
   }
 
-  // ảnh nền ô điền
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    void trySubmit();
+  }
+
   const fieldBg =
     "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/HotenSDT.png')";
 
   return (
     <>
-      {/* Vùng scroll riêng cho form: cao theo visual viewport, tự cộng đệm khi bàn phím mở */}
+      {/* Vùng scroll chính của form */}
       <div ref={scrollRef} className="absolute inset-0 overflow-y-auto">
         <form
           onSubmit={handleSubmit}
@@ -159,7 +167,6 @@ export function RegisterScreen({
               className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
               style={{ backgroundImage: fieldBg }}
             >
-              {/* tạo tỉ lệ khung như cũ */}
               <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
               <input
                 id="fullName"
@@ -169,10 +176,8 @@ export function RegisterScreen({
                 className="font-bold uppercase [&::placeholder]:font-normal
                            absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
                            text-white placeholder-white/70 text-center leading-none"
-                // font-size = 50% chiều cao container nền (đúng như file gốc)
                 style={{
                   fontSize: "calc(var(--fieldH) * 0.5)",
-                  // đệm cuộn cho riêng input này (block: end)
                   scrollMarginBottom: "calc(var(--kb, 0px) + 16px)",
                 } as React.CSSProperties}
                 autoComplete="name"
@@ -216,23 +221,31 @@ export function RegisterScreen({
             )}
           </div>
 
-          {/* Nút gửi */}
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className="w-full flex items-center justify-center"
-            title={canSubmit ? "Xác nhận tham gia" : "Vui lòng nhập đủ thông tin hợp lệ"}
-          >
-            <img
-              src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Gui.png"
-              alt="Xác nhận tham gia"
-              className={`h-auto select-none transition
-                         w-40 sm:w-56 md:w-64 lg:w-72
-                         ${canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"}`}
-              draggable={false}
-            />
-          </button>
+          {/* spacer để nội dung dưới không bị che (tùy chọn) */}
+          <div className="h-24" />
         </form>
+      </div>
+
+      {/* Nút Gửi cố định theo hình (căn giữa, ở ~82% chiều cao màn hình) */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2"
+        style={{ top: "82dvh" }} // 82% chiều cao màn hình; chỉnh số này nếu cần khớp vị trí thiết kế
+      >
+        <button
+          onClick={trySubmit}
+          disabled={!canSubmit}
+          className="w-full flex items-center justify-center"
+          title={canSubmit ? "Xác nhận tham gia" : "Vui lòng nhập đủ thông tin hợp lệ"}
+        >
+          <img
+            src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Gui.png"
+            alt="Xác nhận tham gia"
+            className={`h-auto select-none transition
+                       w-40 sm:w-56 md:w-64 lg:w-72
+                       ${canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"}`}
+            draggable={false}
+          />
+        </button>
       </div>
 
       {/* Overlay Loading */}
