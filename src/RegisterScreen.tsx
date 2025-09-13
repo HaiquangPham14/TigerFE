@@ -102,10 +102,9 @@ export function RegisterScreen({
         <div>
           <div
             ref={nameWrapRef}
-            className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
+            className="relative w-[70%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 70%
             style={{ backgroundImage: fieldBg }}
           >
-            {/* tạo tỉ lệ khung; giữ nguyên như bạn đang dùng */}
             <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
             <input
               id="fullName"
@@ -113,10 +112,9 @@ export function RegisterScreen({
               onChange={(e) => setFullName(e.target.value)}
               placeholder="HỌ VÀ TÊN"
               className="font-bold uppercase [&::placeholder]:font-normal
-                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                         text-white placeholder-white/70 text-center leading-none"
-              // font-size = 80% chiều cao container
-              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
+                 absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
+                 text-white placeholder-white/70 text-center leading-none"
+              style={{ fontSize: "calc(var(--fieldH) * 0.35)" }} // ✅ nhỏ hơn 30%
               autoComplete="name"
             />
           </div>
@@ -131,7 +129,7 @@ export function RegisterScreen({
         <div>
           <div
             ref={phoneWrapRef}
-            className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
+            className="relative w-[70%] bg-no-repeat bg-center bg-contain mx-auto" // giảm chiều rộng còn 70%
             style={{ backgroundImage: fieldBg }}
           >
             <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
@@ -142,9 +140,9 @@ export function RegisterScreen({
               onChange={(e) => setPhone(e.target.value)}
               placeholder="SỐ ĐIỆN THOẠI"
               className="font-bold uppercase [&::placeholder]:font-normal
-                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                         text-white placeholder-white/70 text-center leading-none"
-              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
+                 absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
+                 text-white placeholder-white/70 text-center leading-none"
+              style={{ fontSize: "calc(var(--fieldH) * 0.35)" }} // ✅ nhỏ hơn 30%
               autoComplete="tel"
             />
           </div>
@@ -166,8 +164,8 @@ export function RegisterScreen({
             src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Gui.png"
             alt="Xác nhận tham gia"
             className={`h-auto select-none transition
-                       w-40 sm:w-56 md:w-64 lg:w-72
-                       ${canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"}`}
+               w-28 sm:w-40 md:w-44 lg:w-52   // ✅ nhỏ hơn 30%
+               ${canSubmit ? "hover:scale-105" : "grayscale opacity-60 cursor-not-allowed"}`}
             draggable={false}
           />
         </button>
