@@ -1,34 +1,55 @@
-/* index.css (giữ 3 dòng Tailwind ở đầu như cũ) */
+/* Giữ 3 dòng Tailwind y như cũ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root { color-scheme: light; }
 
-/* Hero background: mặc định ảnh dọc (mobile/portrait) */
+/* Hero background */
 .bg-hero {
   background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/2-003-004%20(1)%20(1).jpg");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* ✅ Cho phép scroll dọc, bỏ khóa */
 html, body, #root {
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: manipulation;
+  min-height: 100%;
+  overflow-x: hidden;      /* chỉ chặn tràn ngang */
+  /* overflow-y: auto;  (mặc định đã auto) */
+  overscroll-behavior: auto;
+  touch-action: auto;
 }
-/* iOS đôi lúc vẫn kéo nền: */
-body { position: fixed; width: 100%; }
+/* ❌ BỎ hack cố định body */
+body { position: static; width: auto; }
 
-
-/* Lớp tiện ích cho khung app cố định toàn màn hình */
+/* ✅ Đổi app-fixed để không chặn scroll nữa */
 .app-fixed {
-  position: fixed;
-  inset: 0;
-  height: 100dvh;        /* ưu tiên đơn vị ổn định trên mobile */
-  width: 100vw;
+  position: relative;      /* trước là fixed */
+  inset: auto;
+  min-height: 100dvh;      /* đủ cao theo viewport, vẫn cho nội dung dài hơn */
+  width: 100%;
 }
+
+/* Fallback cho trình duyệt chưa có dvh */
+@supports not (height: 100dvh) {
+  .app-fixed { min-height: 100svh; }
+}
+
+/* Ảnh nền theo orientation */
+@media (orientation: landscape) {
+  .bg-hero {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
+  }
+}
+@media (min-width: 768px) {
+  .bg-hero {
+    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
+  }
+}
+
+/* Font-face giữ nguyên */
 @font-face {
   font-family: "BarlowCondensed";
   src: url("/fonts/BarlowCondensed-Regular.ttf") format("truetype");
@@ -38,22 +59,4 @@ body { position: fixed; width: 100%; }
   font-family: "BarlowCondensed";
   src: url("/fonts/BarlowCondensed-Bold.ttf") format("truetype");
   font-weight: 700; font-style: normal; font-display: swap;
-}
-
-/* Fallback cho trình duyệt chưa có dvh */
-@supports not (height: 100dvh) {
-  .app-fixed { height: 100svh; } /* hoặc 100vh nếu cần */
-}
-/* Nếu màn hình nằm ngang (landscape) -> dùng ảnh ngang */
-@media (orientation: landscape) {
-  .bg-hero {
-    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-  }
-}
-
-/* Dự phòng cho PC/tablet (nếu trình duyệt không báo orientation) */
-@media (min-width: 768px) {
-  .bg-hero {
-    background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-  }
 }
