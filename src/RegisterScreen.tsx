@@ -96,7 +96,7 @@ export function RegisterScreen({
       <form
         onSubmit={handleSubmit}
         className="font-barlow absolute left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
-        style={{ top: "65vh", width: "80%" }}
+        style={{ top: "60dvh", width: "80%" }}
       >
         {/* Họ và tên */}
         <div>
