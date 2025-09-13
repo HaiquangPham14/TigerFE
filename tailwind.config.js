@@ -2,7 +2,12 @@
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        barlow: ['"BarlowCondensed"', "sans-serif"],
+    dollie: ['"DollieScript"', "cursive"],  
+      },
+    },
   },
   plugins: [],
 };

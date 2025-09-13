@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Confirm from "./Confirm";
 import App from "./App";
 import "./index.css";
+import "./fonts.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

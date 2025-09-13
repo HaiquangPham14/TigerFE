@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const API_BASE = "https://tigerbeer2025.azurewebsites.net/api";
@@ -42,6 +42,37 @@ export function RegisterScreen({
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // refs cho 2 ô nền để đo chiều cao thực tế
+  const nameWrapRef = useRef<HTMLDivElement | null>(null);
+  const phoneWrapRef = useRef<HTMLDivElement | null>(null);
+
+  // đo & set biến --fieldH theo chiều cao container, cập nhật khi resize
+  useEffect(() => {
+    const els = [nameWrapRef.current, phoneWrapRef.current].filter(
+      (x): x is HTMLDivElement => !!x
+    );
+
+    const update = () => {
+      for (const el of els) {
+        const h = el.clientHeight; // px
+        el.style.setProperty("--fieldH", `${h}px`);
+      }
+    };
+
+    // chạy ngay
+    update();
+
+    // ResizeObserver cho mượt
+    const ro = "ResizeObserver" in window ? new ResizeObserver(update) : null;
+    ro && els.forEach((el) => ro.observe(el));
+    window.addEventListener("resize", update);
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+
   const nameValid = fullName.trim().length >= 8;
   const phoneTrim = phone.trim();
   const phoneValid = /^0\d{9}$/.test(phoneTrim) || /^\+84\d{9}$/.test(phoneTrim);
@@ -68,6 +99,7 @@ export function RegisterScreen({
     }
   }
 
+  // ảnh nền ô điền
   const fieldBg =
     "url('https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/HotenSDT.png')";
 
@@ -75,24 +107,28 @@ export function RegisterScreen({
     <>
       <form
         onSubmit={handleSubmit}
-        className="fixed left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
+        className="font-barlow fixed left-1/2 -translate-x-1/2 text-white space-y-5 sm:space-y-6"
         style={{ top: "60svh", width: "80%" }}
       >
         {/* Họ và tên */}
         <div>
           <div
+            ref={nameWrapRef}
             className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
             style={{ backgroundImage: fieldBg }}
           >
+            {/* tạo tỉ lệ khung; giữ nguyên như bạn đang dùng */}
             <div className="pt-[20%] sm:pt-[18%] md:pt-[16%]" />
             <input
               id="fullName"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              placeholder="Họ và tên"
-              className="absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                 text-[clamp(14px,5vw,32px)] text-white
-                 placeholder-white/70 text-center"
+              placeholder="HỌ VÀ TÊN"
+              className="font-bold uppercase [&::placeholder]:font-normal
+                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
+                         text-white placeholder-white/70 text-center leading-none"
+              // font-size = 80% chiều cao container
+              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
               autoComplete="name"
             />
           </div>
@@ -106,6 +142,7 @@ export function RegisterScreen({
         {/* Số điện thoại */}
         <div>
           <div
+            ref={phoneWrapRef}
             className="relative w-full bg-no-repeat bg-center bg-contain mx-auto"
             style={{ backgroundImage: fieldBg }}
           >
@@ -115,10 +152,11 @@ export function RegisterScreen({
               inputMode="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Số điện thoại"
-              className="absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
-                 text-[clamp(14px,5vw,32px)] text-white
-                 placeholder-white/70 text-center"
+              placeholder="SỐ ĐIỆN THOẠI"
+              className="font-bold uppercase [&::placeholder]:font-normal
+                         absolute inset-0 w-[80%] mx-auto h-full bg-transparent outline-none border-none
+                         text-white placeholder-white/70 text-center leading-none"
+              style={{ fontSize: "calc(var(--fieldH) * 0.5)" }}
               autoComplete="tel"
             />
           </div>
