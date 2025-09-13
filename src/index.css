@@ -8,7 +8,8 @@
 /* Hero background - responsive với viewport động */
 .bg-hero {
   background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/newV3%20cut.png");
-  background-size: 100% 100%;
+  /* Thay đổi background-size để ảnh hiển thị hoàn toàn trong container */
+  background-size: contain; /* contain sẽ giữ tỷ lệ và hiển thị toàn bộ ảnh */
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -19,7 +20,7 @@
 /* Fallback cho trình duyệt không hỗ trợ dvh */
 @supports not (height: 80dvh) {
   .bg-hero {
-    min-height: 100vh;
+    min-height: 80vh;
   }
 }
 
@@ -62,15 +63,14 @@ input, textarea, select {
 /* Điều chỉnh cho mobile - tránh bị che bởi browser UI */
 @media (max-width: 768px) {
   .bg-hero {
-    /* Sử dụng svh (small viewport height) để tránh browser UI */
-    min-height: 100svh;
-    background-size: cover; /* Thay đổi từ 100% 100% thành cover để tránh bị méo */
+    min-height: 80svh; /* Thay đổi từ 100svh thành 80svh */
+    background-size: contain; /* Giữ contain để ảnh hiển thị hoàn toàn */
     background-position: center center;
   }
   
   /* Đảm bảo content không bị che */
   .app-fixed {
-    min-height: 100svh;
+    min-height: 80svh; /* Thay đổi từ 100svh thành 80svh */
     padding-top: env(safe-area-inset-top, 0);
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
@@ -79,8 +79,8 @@ input, textarea, select {
 /* Cho màn hình rất nhỏ */
 @media (max-width: 480px) and (max-height: 700px) {
   .bg-hero {
-    background-size: 100% auto; /* Giữ width 100%, height tự động để không bị méo */
-    min-height: 100lvh; /* Large viewport height - toàn bộ màn hình */
+    background-size: contain; /* Giữ contain thay vì 100% auto */
+    min-height: 80lvh; /* Thay đổi từ 100lvh thành 80lvh */
   }
 }
 
@@ -88,15 +88,15 @@ input, textarea, select {
 @media (orientation: landscape) {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-    background-size: 100% 100%; /* Landscape có thể dùng 100% 100% */
+    background-size: contain; /* Thay đổi từ 100% 100% thành contain */
   }
 }
 
 @media (min-width: 768px) {
   .bg-hero {
     background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/ngang.jpg");
-    background-size: 100% 100%; /* Desktop dùng 100% 100% */
-    min-height: 100vh; /* Desktop dùng vh thông thường */
+    background-size: contain; /* Thay đổi từ 100% 100% thành contain */
+    min-height: 80vh; /* Thay đổi từ 100vh thành 80vh */
   }
 }
 
@@ -108,7 +108,7 @@ input, textarea, select {
   
   @media (max-width: 768px) {
     .bg-hero {
-      background-attachment: scroll; /* iOS Safari có thể có vấn đề với fixed */
+      background-attachment: scroll;
     }
   }
 }
