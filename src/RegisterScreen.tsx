@@ -64,14 +64,14 @@ export function RegisterScreen({
 
   const nameValid = fullName.trim().length >= 8;
   const phoneTrim = phone.trim();
-  const phoneValid = /^0\d{9}$/.test(phoneTrim) || /^\+84\d{9}$/.test(phoneTrim);
+  const phoneValid = /^0\d{9}$/.test(phoneTrim);
   const canSubmit = nameValid && phoneValid && !loading;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!nameValid) return onError("Tên không hợp lệ (ít nhất 8 ký tự).");
     if (!phoneValid)
-      return onError("Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).");
+      return onError("Số điện thoại không hợp lệ (10 số bắt đầu 0).");
 
     setLoading(true);
     try {
@@ -148,7 +148,7 @@ export function RegisterScreen({
           </div>
           {!phoneValid && phone.length > 0 && (
             <p className="mt-1 text-xs sm:text-sm text-red-300">
-              Số điện thoại không hợp lệ (10 số bắt đầu 0 hoặc 12 ký tự bắt đầu +84).
+              Số điện thoại không hợp lệ (10 số bắt đầu 0).
             </p>
           )}
         </div>

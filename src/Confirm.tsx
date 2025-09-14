@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export default function Confirm() {
+type Props = { onContinue?: () => void };
+export default function Confirm({ onContinue }: Props) {
   const navigate = useNavigate();
   const [isDesktop, setIsDesktop] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
@@ -27,7 +28,7 @@ export default function Confirm() {
 
       {/* Nút nhỏ hơn ~30% và dính đáy ảnh */}
       <button
-        onClick={() => navigate("/app")}
+        onClick={() => (onContinue ? onContinue() : navigate("/register"))}
         className="absolute left-1/2 -translate-x-1/2"
         style={{
           bottom: "calc(env(safe-area-inset-bottom, 0px) + 8vh)",

@@ -26,16 +26,28 @@ export function AgeScreen({
   return (
     <div className="absolute inset-0 text-white overflow-visible z-50">
       <div
-        className="absolute left-0 w-full px-4 sm:px-6 flex flex-col items-center pointer-events-auto"
-        style={{ top: "60vh" }}
+        className="
+          absolute left-0 w-full px-4 sm:px-6 flex flex-col items-center pointer-events-auto
+          max-h-screen
+        "
+        // Khung giãn từ 60dvh tới cách đáy 10dvh + chiều cao footer (mặc định 64px)
+        style={{ top: "60dvh", bottom: "calc(10dvh + var(--footer-h, 64px))" }}
       >
+        {/* Tiêu đề: dùng vmin để co theo chiều nhỏ hơn */}
         <img
           src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/B%E1%BA%A0N%20%C4%90%C3%83%20%C4%90%E1%BB%A6%2018%20TU%E1%BB%94I_.png"
           alt="Bạn đã đủ 18 tuổi"
-          className="mb-4 w-48 sm:w-64 md:w-80 lg:w-96 h-auto pointer-events-none"
+          className="
+            mb-4 h-auto pointer-events-none
+          "
+          style={{
+            // rộng tối thiểu 36vw (hoặc 36vh nếu chiều cao nhỏ hơn), tối đa 96 (tailwind lg:w-96 tương đương),
+            // và không nhỏ hơn 160px để giữ đọc được
+            width: "clamp(160px, 36vmin, 384px)",
+          }}
         />
 
-        {/* Hai nút giữ nguyên kích thước gốc */}
+        {/* Hai nút */}
         <div className="flex items-center justify-center gap-6 mb-4">
           <button
             type="button"
@@ -46,8 +58,11 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Chua.png"
               alt="Chưa đủ"
-              className="w-28 sm:w-36 md:w-44 lg:w-52 h-auto select-none"
-              onClick={handleBack}
+              className="select-none h-auto"
+              style={{
+                // nút co theo vmin (1 lần) thay vì đo theo width/height riêng rẽ
+                width: "clamp(96px, 22vmin, 208px)", // ~ w-24 → w-52 tương đương
+              }}
               draggable={false}
             />
           </button>
@@ -61,18 +76,29 @@ export function AgeScreen({
             <img
               src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Roi.png"
               alt="Đủ tuổi"
-              className={`w-28 sm:w-36 md:w-44 lg:w-52 h-auto transition select-none ${
+              className={`transition select-none h-auto ${
                 canContinue ? "" : "grayscale opacity-60 cursor-not-allowed"
               }`}
-              onClick={canContinue ? onOk : undefined}
+              style={{
+                width: "clamp(96px, 22vmin, 208px)",
+              }}
               draggable={false}
             />
           </button>
         </div>
 
-        {/* Ô tích & điều khoản - giảm 30% + responsive */}
-        <div className="space-y-3 sm:space-y-4 w-[90%] sm:w-[80%] mx-auto 
-                        text-[10px] sm:text-xs md:text-sm lg:text-base leading-tight">
+        {/* Điều khoản: mt-auto để neo xuống đáy của khung giãn (cách đáy 10dvh, không đụng footer)
+            Font-size dùng vmin -> co theo chiều nhỏ hơn (ngang/dọc) CHỈ 1 lần */}
+        <div
+          className="
+            mt-auto w-[90%] sm:w-[80%] mx-auto leading-tight
+            space-y-3 sm:space-y-4
+          "
+          style={{
+            // cỡ chữ: không nhỏ hơn 9px, không lớn hơn 15px, và tỉ lệ dùng 2.6vmin
+            fontSize: "clamp(9px, 2.6vmin, 15px)",
+          }}
+        >
           <label className="flex items-start gap-2 sm:gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -80,13 +106,20 @@ export function AgeScreen({
               onChange={() => setAgree1(!agree1)}
               className="hidden"
             />
+            {/* Kích thước checkbox theo em để tỉ lệ với font-size (co cùng 1 lần) */}
             <div
-              className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6
-                         flex items-center justify-center bg-center bg-contain bg-no-repeat"
-              style={{ backgroundImage: checkBg }}
+              className="flex-shrink-0 flex items-center justify-center bg-center bg-contain bg-no-repeat"
+              style={{
+                backgroundImage: checkBg,
+                width: "1.2em",
+                height: "1.2em",
+              }}
             >
               {agree1 && (
-                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 drop-shadow" />
+                <CheckCircle
+                  className="text-green-400 drop-shadow"
+                  style={{ width: "0.9em", height: "0.9em" }}
+                />
               )}
             </div>
             <span>
@@ -110,12 +143,18 @@ export function AgeScreen({
               className="hidden"
             />
             <div
-              className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6
-                         flex items-center justify-center bg-center bg-contain bg-no-repeat"
-              style={{ backgroundImage: checkBg }}
+              className="flex-shrink-0 flex items-center justify-center bg-center bg-contain bg-no-repeat"
+              style={{
+                backgroundImage: checkBg,
+                width: "1.2em",
+                height: "1.2em",
+              }}
             >
               {agree2 && (
-                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 drop-shadow" />
+                <CheckCircle
+                  className="text-green-400 drop-shadow"
+                  style={{ width: "0.9em", height: "0.9em" }}
+                />
               )}
             </div>
             <span>
