@@ -36,7 +36,7 @@ export default function Confirm() {
         <img
           src="https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/Tieptuc.png"
           alt="Tiếp tục"
-          className="w-28 md:w-40 hover:scale-105 transition-transform duration-300"
+          className="w-36 md:w-52 hover:scale-105 transition-transform duration-300"
         />
       </button>
 
