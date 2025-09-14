@@ -65,7 +65,8 @@ body { position: static; width: auto; }
 /* Nền riêng cho trang Confirm */
 .bg-confirm {
   /* Ảnh dọc (mobile/portrait) — link riêng của Confirm */
-  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png");
+  /* background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/TicketLuckyDraw-004.png"); */
+  background-image: url("https://cdn.jsdelivr.net/gh/HaiquangPham14/FESS@main/BgConfirm.png");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
