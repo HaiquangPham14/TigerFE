@@ -8,11 +8,11 @@ export function SuccessScreen() {
 
   // Đường dẫn 5 GIF (đặt trong public/animations/)
   // Đổi tên/đường dẫn cho khớp file của bạn nếu khác
-  const G1 = "public/animations/phao-1.gif";
-  const G2 = "public/animations/phao-2.gif";
-  const G3 = "public/animations/phao-3.gif";
-  const G4 = "public/animations/phao-4.gif";
-  const G5 = "public/animations/phao-5.gif";
+  const G1 = "https://www.tigerstreetfootball2025.vn/animations/phao-1.gif";
+  const G2 = "https://www.tigerstreetfootball2025.vn/animations/phao-2.gif";
+  const G3 = "https://www.tigerstreetfootball2025.vn/animations/phao-3.gif";
+  const G4 = "https://www.tigerstreetfootball2025.vn/animations/phao-4.gif";
+  const G5 = "https://www.tigerstreetfootball2025.vn/animations/phao-5.gif";
 
   return (
     <div
