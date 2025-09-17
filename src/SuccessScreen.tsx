@@ -36,15 +36,15 @@ export function SuccessScreen() {
         />
         {/* Trên phải */}
         <img
-          src={G3}
+          src={G4}
           alt=""
           className="absolute left-[60%] top-[32%] w-[50vw] max-w-[500px] h-auto select-none"
         />
         {/* Trên giữa */}
         <img
-          src={G3}
+          src={G5}
           alt=""
-          className="absolute left-[60%] -translate-x-1/2 top-[10%] w-[30vw] max-w-[400px] h-auto select-none"
+          className="absolute left-[60%] -translate-x-1/2 top-[10%] w-[20vw] max-w-[300px] h-auto select-none"
         />
         {/* Dưới trái */}
         <img
