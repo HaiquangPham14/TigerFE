@@ -125,7 +125,7 @@ export function AgeScreen({
             <span>
               Tôi đồng ý với{" "}
               <a
-                href="https://docs.google.com/document/d/1dg6DK_tkj3g4L22l4ZVKPTzoMISyKdck/view"
+                href="https://drive.google.com/file/d/1RBlj7ONc4bAxY_GunIm_2kfe0ozYOfGy/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline text-orange-300 hover:text-orange-400"
